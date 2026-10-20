@@ -4,24 +4,16 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- five petals -->
-    <path
-        android:fillColor="#E85D8A"
-        android:pathData="M42,34 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
-    <path
-        android:fillColor="#E85D8A"
-        android:pathData="M62,48 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
-    <path
-        android:fillColor="#E85D8A"
-        android:pathData="M54,72 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
-    <path
-        android:fillColor="#E85D8A"
-        android:pathData="M30,72 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
-    <path
-        android:fillColor="#E85D8A"
-        android:pathData="M22,48 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
+    <!-- four petals -->
+    <path android:fillColor="#AD5750"
+        android:pathData="M54,26 m-12,0 a12,15 0 1,0 24,0 a12,15 0 1,0 -24,0" />
+    <path android:fillColor="#AD5750"
+        android:pathData="M54,82 m-12,0 a12,15 0 1,0 24,0 a12,15 0 1,0 -24,0" />
+    <path android:fillColor="#AD5750"
+        android:pathData="M26,54 m-15,0 a15,12 0 1,0 30,0 a15,12 0 1,0 -30,0" />
+    <path android:fillColor="#AD5750"
+        android:pathData="M82,54 m-15,0 a15,12 0 1,0 30,0 a15,12 0 1,0 -30,0" />
     <!-- centre -->
-    <path
-        android:fillColor="#FFB38A"
-        android:pathData="M46,54 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0" />
+    <path android:fillColor="#B98A3C"
+        android:pathData="M54,54 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0" />
 </vector>

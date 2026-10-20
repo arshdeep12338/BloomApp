@@ -5,13 +5,16 @@ import com.bloom.app.ads.AdAnalytics
 import com.bloom.app.ads.AdConfig
 import com.bloom.app.ads.AppOpenAdManager
 import com.bloom.app.ads.LogcatAdAnalytics
-import com.bloom.app.data.DataStoreOnboardingRepository
-import com.bloom.app.data.OnboardingRepository
+import com.bloom.app.data.DataStoreUserPreferencesRepository
+import com.bloom.app.data.UserPreferencesRepository
+import com.bloom.app.data.WellnessRepository
 
 /** Minimal manual DI container; keeps the demo free of a DI framework. */
 class AppContainer(application: Application) {
 
-    val onboardingRepository: OnboardingRepository = DataStoreOnboardingRepository(application)
+    val userPreferences: UserPreferencesRepository = DataStoreUserPreferencesRepository(application)
+
+    val wellness: WellnessRepository = WellnessRepository()
 
     /** Swap for a Firebase-backed implementation without touching call sites. */
     val adAnalytics: AdAnalytics = LogcatAdAnalytics()

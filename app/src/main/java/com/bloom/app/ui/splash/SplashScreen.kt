@@ -1,28 +1,26 @@
 package com.bloom.app.ui.splash
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.bloom.app.ads.AdConfig
 import com.bloom.app.ads.AppOpenAdManager
+import com.bloom.app.ui.components.BloomFlower
+import com.bloom.app.ui.theme.Cream
+import com.bloom.app.ui.theme.Ink
+import com.bloom.app.ui.theme.Rose
+import com.bloom.app.ui.theme.RoseMid
 import com.bloom.app.ui.util.findComponentActivity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -57,38 +55,29 @@ fun SplashScreen(
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primaryContainer),
+        modifier = Modifier.fillMaxSize().background(Cream),
         contentAlignment = Alignment.Center,
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.34f)
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surface),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = "🌸", fontSize = 56.sp)
+        // Tiny sparkles at fixed fractions of the screen.
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            listOf(
+                Offset(0.22f, 0.18f), Offset(0.84f, 0.27f), Offset(0.17f, 0.74f),
+                Offset(0.88f, 0.69f), Offset(0.52f, 0.9f),
+            ).forEach { p ->
+                drawCircle(
+                    color = Ink.copy(alpha = 0.35f),
+                    radius = 1.6.dp.toPx(),
+                    center = Offset(size.width * p.x, size.height * p.y),
+                )
             }
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = "Bloom",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.primary,
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Your cycle. Your wellness.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
         }
+        // Soft glow behind the logo.
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.62f)
+                .aspectRatio(1f)
+                .background(Brush.radialGradient(listOf(RoseMid.copy(alpha = 0.55f), Cream))),
+        )
+        BloomFlower(modifier = Modifier.fillMaxWidth(0.26f), petalColor = Rose)
     }
 }

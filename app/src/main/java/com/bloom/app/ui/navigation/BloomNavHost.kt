@@ -1,14 +1,14 @@
 package com.bloom.app.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bloom.app.di.AppContainer
-import com.bloom.app.ui.home.HomeScreen
-import com.bloom.app.ui.home.HomeViewModel
+import com.bloom.app.ui.main.MainScreen
+import com.bloom.app.ui.main.MainViewModel
 import com.bloom.app.ui.onboarding.OnboardingScreen
 import com.bloom.app.ui.onboarding.OnboardingViewModel
 import com.bloom.app.ui.splash.SplashScreen
@@ -18,7 +18,7 @@ import com.bloom.app.ui.splash.StartDestination
 object Routes {
     const val SPLASH = "splash"
     const val ONBOARDING = "onboarding"
-    const val HOME = "home"
+    const val MAIN = "main"
 }
 
 @Composable
@@ -29,7 +29,7 @@ fun BloomNavHost(container: AppContainer) {
 
         composable(Routes.SPLASH) {
             val viewModel: SplashViewModel = viewModel(
-                factory = SplashViewModel.factory(container.onboardingRepository),
+                factory = SplashViewModel.factory(container.userPreferences),
             )
             SplashScreen(
                 viewModel = viewModel,
@@ -37,7 +37,7 @@ fun BloomNavHost(container: AppContainer) {
                 onFinished = { destination ->
                     val route = when (destination) {
                         StartDestination.Onboarding -> Routes.ONBOARDING
-                        StartDestination.Home -> Routes.HOME
+                        StartDestination.Home -> Routes.MAIN
                     }
                     navController.navigate(route) {
                         popUpTo(Routes.SPLASH) { inclusive = true }
@@ -48,25 +48,38 @@ fun BloomNavHost(container: AppContainer) {
 
         composable(Routes.ONBOARDING) {
             val viewModel: OnboardingViewModel = viewModel(
-                factory = OnboardingViewModel.factory(container.onboardingRepository),
+                factory = OnboardingViewModel.factory(container.userPreferences),
             )
             OnboardingScreen(
                 viewModel = viewModel,
                 onFinished = {
-                    navController.navigate(Routes.HOME) {
+                    navController.navigate(Routes.MAIN) {
                         popUpTo(Routes.ONBOARDING) { inclusive = true }
                     }
                 },
             )
         }
 
-        composable(Routes.HOME) {
-            // From here on the user is past splash/onboarding, so App Open Ads may be shown
-            // when the app returns from the background.
-            LaunchedEffect(Unit) { container.appOpenAdManager.foregroundAdsEnabled = true }
+        composable(Routes.MAIN) {
+            // While the user is on Home they are past splash/onboarding, so App Open Ads may
+            // be shown on background → foreground. Switched off again when leaving (sign out).
+            DisposableEffect(Unit) {
+                container.appOpenAdManager.foregroundAdsEnabled = true
+                onDispose { container.appOpenAdManager.foregroundAdsEnabled = false }
+            }
 
-            val viewModel: HomeViewModel = viewModel()
-            HomeScreen(viewModel = viewModel, analytics = container.adAnalytics)
+            val viewModel: MainViewModel = viewModel(
+                factory = MainViewModel.factory(container.userPreferences, container.wellness),
+            )
+            MainScreen(
+                viewModel = viewModel,
+                analytics = container.adAnalytics,
+                onSignedOut = {
+                    navController.navigate(Routes.ONBOARDING) {
+                        popUpTo(Routes.MAIN) { inclusive = true }
+                    }
+                },
+            )
         }
     }
 }

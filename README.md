@@ -1,4 +1,4 @@
-# Bloom – women's wellness app (Onboarding, Home, AdMob)
+# Bloom – PCOS wellness app (Onboarding, Dashboard, AdMob)
 
 Kotlin · Jetpack Compose · MVVM · DataStore · Google Mobile Ads (AdMob)
 
@@ -37,28 +37,44 @@ IDs live in `app/build.gradle.kts` and reach the code through `BuildConfig`
 
 These are Google's published sample IDs.
 
+## What is implemented (from the Figma)
+
+| Figma frame | Where it lives |
+|---|---|
+| Splash, Logo | `ui/splash`, `ui/components/Flower.kt` (Canvas-drawn logo) |
+| Onboarding steps 1–4 (welcome, name, goals to track, reminder time) | `ui/onboarding` |
+| Home Dashboard (Today's Goals, PCOS FAQ pager, Cycle / Symptom shortcuts, Goal Progress, Today's tip) | `ui/dashboard` |
+| Insights (score chart, cycle, daily summary, symptom patterns) | `ui/insights` |
+| Learn (PCOS FAQ accordion) | `ui/learn` |
+| Settings (profile, tracking toggles, daily targets, notifications, sign out) | `ui/settings` |
+| Log Meals / Movement / Water / Relaxation / Sleep, Log Cycle, Today's Symptoms, Edit Profile, Reminder Time, Live Notification Preview | `ui/sheets` (Material bottom sheets) |
+
+Onboarding choices (name, tracked goals, reminder) and the "onboarding completed" flag are stored in
+Preferences DataStore. The dashboard only shows the goals the user chose, and Settings changes take effect immediately.
+
 ## Architecture
 
 ```
 com.bloom.app
 ├── BloomApplication        SDK init (background thread), wires the App Open manager to lifecycle
 ├── MainActivity            edge-to-edge, hosts the Compose NavHost
-├── di/AppContainer         tiny manual DI (repository, analytics, ad manager)
-├── data/                   OnboardingRepository (interface) + DataStore implementation
+├── di/AppContainer         tiny manual DI (repositories, analytics, ad manager)
+├── data/                   Models, UserPreferencesRepository (DataStore), WellnessRepository (today's log),
+│                           LearnContent (FAQ text), DemoData (sample history for Insights)
 ├── ads/                    AdConfig, AdAnalytics, NetworkMonitor, AppOpenAdManager, AdaptiveBannerAd
 └── ui/
-    ├── navigation/         Routes + NavHost (splash → onboarding → home)
-    ├── splash/             SplashViewModel + SplashScreen (launch routing + launch ad)
-    ├── onboarding/         OnboardingViewModel + pager screen (indicator, Skip, Next/Get Started)
-    ├── home/               HomeViewModel (StateFlow<HomeUiState>), screen, reusable components
-    └── theme/              colors, typography
+    ├── navigation/         Routes + NavHost (splash → onboarding → main)
+    ├── splash/             launch routing + launch ad
+    ├── onboarding/         OnboardingViewModel + 4-step screen
+    ├── main/               MainViewModel (one StateFlow<MainUiState>), scaffold, bottom nav, sheet host
+    ├── dashboard/ insights/ learn/ settings/   one screen file per tab
+    ├── sheets/             all bottom-sheet contents
+    ├── components/         shared Compose components (cards, buttons, pills, progress, flower…)
+    └── theme/              colors + typography (italic serif headings, sans body)
 ```
 
-- **MVVM**: each screen has a ViewModel exposing a `StateFlow` of immutable UI state; composables are
-  stateless and receive state + callbacks.
-- **Persistence**: `onboarding_completed` boolean in Preferences DataStore.
-- **No hardcoded screen sizes**: layouts use weights, fractions of the available width and aspect ratios;
-  the Home screen scrolls; the adaptive banner measures its width from the layout.
+- **MVVM**: ViewModels expose immutable `StateFlow` UI state; composables are stateless (state + callbacks).
+- **No hardcoded screen sizes**: layouts use weights, fractions of available width and aspect ratios; every tab scrolls.
 
 ## Launch flow
 
@@ -78,7 +94,7 @@ Later        : Background → Foreground → App Open Ad (if eligible)
   otherwise waits **at most 4 seconds** for the in-flight load, then continues to Home no matter what.
   It skips the wait entirely when offline, and skips showing if the app was backgrounded while waiting.
 - **First-time users**: the splash routes to Onboarding without ever calling the ad path, and
-  foreground ads stay disabled (`foregroundAdsEnabled = false`) until the Home screen is reached.
+  foreground ads stay disabled (`foregroundAdsEnabled = false`) until the main screen is reached.
 - **Foreground**: a `ProcessLifecycleOwner` observer fires once per background → foreground transition
   (not on rotation or Activity changes). It shows an ad only if foreground ads are enabled, no ad is
   showing, an Activity is available and a non-expired ad is loaded; otherwise it just makes sure a load is queued.
@@ -92,8 +108,8 @@ Later        : Background → Foreground → App Open Ad (if eligible)
 ### Adaptive banner (`AdaptiveBannerAd`)
 
 - Uses `AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize` with the width the layout provides.
-- Sits in the Scaffold `bottomBar` **between the content and the navigation bar**, above a divider,
-  so it can never overlap content or navigation (Scaffold insets the content by its height).
+- Shown on the Dashboard (home) tab, in the Scaffold `bottomBar` **between the content and the bottom navigation**,
+  above a divider, so it can never overlap content or navigation (Scaffold insets the content by its height).
 - Reserves its height while loading; collapses completely if loading fails.
 - `AdView` pause/resume follows the lifecycle and `destroy()` runs on dispose.
 
@@ -108,7 +124,8 @@ Later        : Background → Foreground → App Open Ad (if eligible)
 | Case | How to check |
 |---|---|
 | First launch | Fresh install → splash → onboarding → home, no app open ad in Logcat |
-| Skip / Get Started | Both set the flag; relaunch goes straight to Home |
+| Finish onboarding | "Enter Bloom" or "I'll set this up later" saves the flag; relaunch goes straight to the Dashboard |
+| Sign out | Settings → Sign out clears data and returns to onboarding (no app open ad) |
 | Returning launch | Relaunch → `app_open_ad_requested/loaded/shown` → dismiss → Home |
 | Foreground ad | On Home press the home button, reopen → ad shows |
 | Offline | Airplane mode → relaunch → goes to Home without waiting |
@@ -117,13 +134,18 @@ Later        : Background → Foreground → App Open Ad (if eligible)
 
 ## Assumptions and limitations
 
-- **The Figma file could not be read** (Figma blocks automated access), so the onboarding and Home UI
-  are a placeholder design built from the brief (cycle card, week strip, check-in, symptoms, quick
-  actions, insights, articles). Colors are in `ui/theme/Theme.kt`, onboarding copy in `OnboardingScreen.kt`,
-  Home content in `HomeModels.kt`. Matching the Figma means adjusting those files and the Home components.
-- Emoji stand in for illustrations/icons; text is not yet in `strings.xml`.
-- Home data is sample data held in memory; check-ins are not persisted.
-- Quick actions and articles show a confirmation snackbar; Track / Insights / Profile tabs are placeholders.
+- **Built from screenshots of the Figma**, not from the Figma file itself (Figma blocks automated access).
+  Layout, colors, copy and component styling follow the screenshots; exact font files and illustrations were not
+  available, so headings use the system serif in italic and the logo is drawn in code. Swap in the real fonts
+  (`ui/theme/Theme.kt`) and any exported illustrations to get a pixel-level match.
+- The icons are Material icons chosen to resemble the Figma icons.
+- **Today's log is in memory** (resets when the app process restarts); only preferences are persisted.
+- **Insights history is sample data** (`data/DemoData.kt`) for the days before today; today's values are live.
+- Reminders are stored but **no real notification is scheduled**; "Live Notification Preview" is an in-app mock-up
+  of the lock-screen design with a working countdown for the Meditation tab.
+- Cycle prediction uses a fixed 28-day cycle; the FAQ text is general information, not medical advice.
+- The dashboard "PCOS FAQ" cards open the Learn tab; "Mark as done" on the tip opens the sleep log.
 - No consent flow (UMP/GDPR) is included. Add it before shipping in regions that require it.
 - The release build is signed with the debug key so it is installable; use a real keystore for production.
 - Frequency capping is available via `AdConfig.MIN_INTERVAL_BETWEEN_APP_OPEN_ADS_MS` (default 0 = off).
+- The project has not been compiled in the environment it was written in; expect to fix small issues on first sync.
