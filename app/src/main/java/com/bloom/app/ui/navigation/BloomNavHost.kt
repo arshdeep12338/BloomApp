@@ -61,8 +61,6 @@ fun BloomNavHost(container: AppContainer) {
         }
 
         composable(Routes.MAIN) {
-            // While the user is on Home they are past splash/onboarding, so App Open Ads may
-            // be shown on background → foreground. Switched off again when leaving (sign out).
             DisposableEffect(Unit) {
                 container.appOpenAdManager.foregroundAdsEnabled = true
                 onDispose { container.appOpenAdManager.foregroundAdsEnabled = false }

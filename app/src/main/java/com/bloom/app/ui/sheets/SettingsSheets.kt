@@ -49,10 +49,6 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-/* -------------------------------------------------------------------------- */
-/* Edit profile                                                                */
-/* -------------------------------------------------------------------------- */
-
 @Composable
 fun EditProfileSheetContent(
     initialName: String,
@@ -105,11 +101,6 @@ fun EditProfileSheetContent(
         )
     }
 }
-
-/* -------------------------------------------------------------------------- */
-/* Reminder time                                                               */
-/* -------------------------------------------------------------------------- */
-
 @Composable
 fun ReminderSheetContent(
     initialMinutes: Int?,
@@ -138,10 +129,6 @@ fun ReminderSheetContent(
         )
     }
 }
-
-/* -------------------------------------------------------------------------- */
-/* Live notification preview                                                   */
-/* -------------------------------------------------------------------------- */
 
 private enum class PreviewTab(val label: String) { Meditation("Meditation"), DailyGoal("Daily goal"), Water("Water") }
 
@@ -205,7 +192,6 @@ fun NotificationPreviewSheetContent(
         }
         Spacer(Modifier.height(16.dp))
 
-        // Lock-screen mock-up.
         Column(
             modifier = Modifier
                 .fillMaxWidth(0.72f)
@@ -300,5 +286,4 @@ fun NotificationPreviewSheetContent(
 
 private fun formatCountdown(seconds: Int): String = "%d:%02d".format(seconds / 60, seconds % 60)
 
-/** Used by Settings to show the saved reminder time. */
 fun reminderLabel(minutes: Int?): String = minutes?.let { formatMinutes(it) } ?: "Not set"

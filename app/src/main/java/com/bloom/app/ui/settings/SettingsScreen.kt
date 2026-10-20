@@ -106,7 +106,6 @@ fun SettingsScreen(
         }
         Spacer(Modifier.height(20.dp))
 
-        // What you're tracking
         SectionTitle("What you're tracking")
         Spacer(Modifier.height(8.dp))
         SoftCard(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(vertical = 4.dp)) {
@@ -127,7 +126,6 @@ fun SettingsScreen(
         }
         Spacer(Modifier.height(20.dp))
 
-        // Daily goal targets
         SectionTitle("Daily goal targets")
         Spacer(Modifier.height(8.dp))
         SoftCard(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(vertical = 4.dp)) {

@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 const val ONBOARDING_STEPS = 4
 
 data class OnboardingUiState(
-    /** 0-based: 0 welcome, 1 name, 2 goals, 3 reminder. */
     val step: Int = 0,
     val name: String = "",
     val goals: Set<Goal> = Goal.entries.toSet(),
@@ -45,14 +44,9 @@ class OnboardingViewModel(
     }
 
     fun setReminder(minutes: Int) = _state.update { it.copy(reminderMinutes = minutes) }
-
-    /**
-     * Saves everything and marks onboarding complete, then calls [onDone].
-     * [skipReminder] is used by "I'll set this up later".
-     */
     fun finish(skipReminder: Boolean, onDone: () -> Unit) {
         val current = _state.value
-        if (current.saving) return // ignore double taps
+        if (current.saving) return
         _state.update { it.copy(saving = true) }
         viewModelScope.launch {
             preferences.completeOnboarding(

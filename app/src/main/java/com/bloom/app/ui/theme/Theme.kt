@@ -11,7 +11,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Palette sampled from the Figma screenshots.
 val Cream = Color(0xFFFCF8F5)
 val Rose = Color(0xFFAD5750)
 val RoseDark = Color(0xFF8E3F3A)
@@ -24,7 +23,6 @@ val Gold = Color(0xFFB98A3C)
 val LinkBlue = Color(0xFF2F5FD0)
 val TipBackground = Color(0xFFF6E7DD)
 
-// One accent per goal (progress rings on the dashboard).
 val GoalMealsColor = Color(0xFFAD5750)
 val GoalMovementColor = Color(0xFF5E8C61)
 val GoalWaterColor = Color(0xFF4F7CA8)
@@ -51,8 +49,6 @@ private val BloomColorScheme = lightColorScheme(
     outline = Border,
     outlineVariant = Border,
 )
-
-// Headings use an italic serif (the Figma uses an editorial serif); body text is sans.
 private val BloomTypography = Typography(
     headlineLarge = TextStyle(
         fontFamily = Serif, fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold,

@@ -1,6 +1,5 @@
 package com.bloom.app.data
 
-/** Everything a user can track. The first five have numeric daily targets. */
 enum class Goal(
     val title: String,
     val unit: String,
@@ -70,7 +69,6 @@ data class UserPreferences(
     val userName: String = "",
     val trackedGoals: Set<Goal> = Goal.entries.toSet(),
     val targets: Map<Goal, Int> = Goal.entries.filter { it.measurable }.associateWith { it.defaultTarget },
-    /** Minutes after midnight, or null when no reminder is set. */
     val reminderMinutes: Int? = null,
     val notificationsEnabled: Boolean = true,
     val journeyStage: JourneyStage? = null,

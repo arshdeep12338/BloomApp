@@ -71,11 +71,6 @@ import com.bloom.app.ui.theme.Rose
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-
-/* -------------------------------------------------------------------------- */
-/* Counter sheets: Movement, Water, Relaxation, Sleep                          */
-/* -------------------------------------------------------------------------- */
-
 private data class CounterCopy(
     val title: String,
     val caption: String,
@@ -172,10 +167,6 @@ fun CounterSheetContent(
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* Meals                                                                       */
-/* -------------------------------------------------------------------------- */
-
 @Composable
 fun MealsSheetContent(
     meals: Map<MealType, MealQuality>,
@@ -225,10 +216,6 @@ fun MealsSheetContent(
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* Symptoms                                                                    */
-/* -------------------------------------------------------------------------- */
-
 @Composable
 fun SymptomsSheetContent(
     symptoms: Map<SymptomCategory, Int>,
@@ -257,7 +244,10 @@ fun SymptomsSheetContent(
                 Text(category.label, style = MaterialTheme.typography.titleSmall)
             }
             Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 category.options.forEachIndexed { index, label ->
                     OptionPill(
                         text = label,
@@ -272,10 +262,6 @@ fun SymptomsSheetContent(
         PrimaryButton("Done", onClose)
     }
 }
-
-/* -------------------------------------------------------------------------- */
-/* Cycle                                                                       */
-/* -------------------------------------------------------------------------- */
 
 @Composable
 fun CycleSheetContent(

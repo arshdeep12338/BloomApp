@@ -17,8 +17,6 @@ import java.io.IOException
 
 interface UserPreferencesRepository {
     val preferences: Flow<UserPreferences>
-
-    /** Saves everything collected in onboarding and marks onboarding as completed. */
     suspend fun completeOnboarding(name: String, trackedGoals: Set<Goal>, reminderMinutes: Int?)
 
     suspend fun setName(name: String)
@@ -27,8 +25,6 @@ interface UserPreferencesRepository {
     suspend fun setTarget(goal: Goal, value: Int)
     suspend fun setNotificationsEnabled(enabled: Boolean)
     suspend fun setReminderMinutes(minutes: Int?)
-
-    /** Wipes all saved data (used by Sign out). */
     suspend fun clear()
 }
 
@@ -40,7 +36,6 @@ class DataStoreUserPreferencesRepository(context: Context) : UserPreferencesRepo
 
     override val preferences: Flow<UserPreferences> = dataStore.data
         .catch { error ->
-            // An unreadable file must not crash launch: behave like a first launch.
             if (error is IOException) emit(emptyPreferences()) else throw error
         }
         .map { prefs -> prefs.toUserPreferences() }

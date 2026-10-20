@@ -52,11 +52,6 @@ import com.bloom.app.ui.theme.Rose
 import com.bloom.app.ui.theme.RoseMid
 import com.bloom.app.ui.theme.RoseSoft
 
-/* ---------------------------------------------------------------------------
- * Reusable building blocks shared by onboarding, the dashboard, the tabs and
- * the bottom sheets. Sizes come from weights/fractions, never from screen width.
- * ------------------------------------------------------------------------- */
-
 @Composable
 fun SoftCard(
     modifier: Modifier = Modifier,
@@ -125,8 +120,6 @@ fun SecondaryButton(
         Text(text, style = MaterialTheme.typography.titleSmall)
     }
 }
-
-/** White outlined option; filled rose when selected. */
 @Composable
 fun OptionPill(
     text: String,
@@ -176,8 +169,6 @@ fun CircleIconButton(
         Icon(icon, contentDescription = contentDescription, tint = tint, modifier = Modifier.size(iconSize))
     }
 }
-
-/** Rounded-square icon holder used in lists. */
 @Composable
 fun IconTile(
     icon: ImageVector,
@@ -235,8 +226,6 @@ fun SheetHeader(title: String, onClose: () -> Unit, modifier: Modifier = Modifie
 fun SectionTitle(text: String, modifier: Modifier = Modifier) {
     Text(text = text, style = MaterialTheme.typography.titleLarge, modifier = modifier)
 }
-
-/** Tab title + one-line description, as on Insights / Learn / Settings. */
 @Composable
 fun ScreenHeader(title: String, subtitle: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -284,8 +273,6 @@ fun InfoCard(
         }
     }
 }
-
-/** Radio-style selectable card (journey stage, reminder time). */
 @Composable
 fun ChoiceCard(
     title: String,
@@ -314,7 +301,6 @@ fun ChoiceCard(
     }
 }
 
-/** Thin horizontal progress bar (drawn with plain boxes so it has no API-version quirks). */
 @Composable
 fun ThinProgress(
     fraction: Float,
@@ -333,7 +319,6 @@ fun ThinProgress(
     }
 }
 
-/** Segmented progress used at the top of onboarding. */
 @Composable
 fun StepProgress(total: Int, filled: Int, modifier: Modifier = Modifier) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -349,7 +334,6 @@ fun StepProgress(total: Int, filled: Int, modifier: Modifier = Modifier) {
     }
 }
 
-/** Circular progress ring with content (an icon) in the middle. */
 @Composable
 fun ProgressRing(
     fraction: Float,

@@ -3,8 +3,6 @@ package com.bloom.app.ads
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-
-/** Cheap connectivity check used to skip pointless ad requests/waits while offline. */
 object NetworkMonitor {
     fun isOnline(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager

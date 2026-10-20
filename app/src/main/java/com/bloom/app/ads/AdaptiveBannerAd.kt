@@ -26,17 +26,6 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 
 private enum class BannerState { Loading, Loaded, Failed }
-
-/**
- * Reusable adaptive banner.
- *
- * - Sizes itself from the width the layout gives it, so it adapts to any screen / orientation.
- * - Reserves the banner height while loading (no layout jump) and collapses to nothing if the
- *   load fails, so a failed ad never leaves an empty gap.
- * - Forwards pause/resume/destroy to the AdView so it follows the host lifecycle.
- *
- * Place it in a layout slot of its own (e.g. a Scaffold bottomBar) so it never overlaps content.
- */
 @Composable
 fun AdaptiveBannerAd(
     analytics: AdAnalytics,

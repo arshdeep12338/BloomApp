@@ -21,8 +21,6 @@ enum class SymptomCategory(val label: String, val options: List<String>) {
     Mood("Mood", listOf("Great", "Okay", "Low", "Very low")),
     SleepQuality("Sleep quality", listOf("Great", "Okay", "Poor", "Very poor")),
 }
-
-/** Cycle length used to estimate the next period until real history exists. */
 const val DEFAULT_CYCLE_DAYS = 28L
 
 data class DailyLog(
@@ -32,7 +30,6 @@ data class DailyLog(
     val relaxationMin: Int = 0,
     val sleepHrs: Int = 0,
     val periodStart: LocalDate? = null,
-    /** Selected option index per symptom category. */
     val symptoms: Map<SymptomCategory, Int> = emptyMap(),
 ) {
     fun progressOf(goal: Goal): Int = when (goal) {
@@ -50,8 +47,6 @@ data class GoalProgress(val goal: Goal, val current: Int, val target: Int) {
     val isComplete: Boolean get() = target > 0 && current >= target
     val label: String get() = "$current/$target ${goal.unit}"
 }
-
-/** Progress for the measurable goals the user chose to track. */
 fun goalProgress(prefs: UserPreferences, log: DailyLog): List<GoalProgress> =
     Goal.entries
         .filter { it.measurable && it in prefs.trackedGoals }
@@ -59,11 +54,6 @@ fun goalProgress(prefs: UserPreferences, log: DailyLog): List<GoalProgress> =
 
 fun List<GoalProgress>.overallPercent(): Int =
     if (isEmpty()) 0 else (map { it.fraction }.average() * 100).toInt()
-
-/**
- * In-memory log of today's entries. (Prototype: it is not persisted, so it resets when the
- * app process restarts. Swap this class for a Room/DataStore-backed one to persist.)
- */
 class WellnessRepository {
 
     private val _log = MutableStateFlow(DailyLog())
@@ -79,8 +69,6 @@ class WellnessRepository {
             else -> current
         }
     }
-
-    /** Selecting the already-selected option clears it. */
     fun setMeal(type: MealType, quality: MealQuality) = _log.update { current ->
         val meals = if (current.meals[type] == quality) current.meals - type else current.meals + (type to quality)
         current.copy(meals = meals)

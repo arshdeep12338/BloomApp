@@ -117,8 +117,6 @@ fun InsightsScreen(
     }
 }
 
-/* ------------------------------------------------------------------ score */
-
 @Composable
 private fun ScoreCard(todayPercent: Int) {
     var range by remember { mutableStateOf(ScoreRange.Week) }
@@ -143,8 +141,6 @@ private fun ScoreCard(todayPercent: Int) {
             }
         }
         Spacer(Modifier.height(14.dp))
-
-        // Bars are sized as a share of a fixed chart height; widths come from weights.
         Row(
             modifier = Modifier.fillMaxWidth().height(96.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -244,8 +240,6 @@ private fun RangeToggle(selected: ScoreRange, onSelect: (ScoreRange) -> Unit) {
     }
 }
 
-/* ------------------------------------------------------------------ cycle */
-
 @Composable
 private fun CycleRow(periodStart: LocalDate?, onClick: () -> Unit) {
     SoftCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
@@ -270,8 +264,6 @@ private fun CycleRow(periodStart: LocalDate?, onClick: () -> Unit) {
         }
     }
 }
-
-/* ---------------------------------------------------------- daily summary */
 
 @Composable
 private fun DailySummary(percent: Int, completed: Int, total: Int) {
@@ -302,8 +294,6 @@ private fun DailySummary(percent: Int, completed: Int, total: Int) {
         }
     }
 }
-
-/* ------------------------------------------------------- symptom patterns */
 
 @Composable
 private fun SymptomPatterns(todaySymptoms: Map<SymptomCategory, Int>) {

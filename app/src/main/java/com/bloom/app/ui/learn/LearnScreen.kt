@@ -35,7 +35,6 @@ import com.bloom.app.ui.theme.Muted
 
 @Composable
 fun LearnScreen(modifier: Modifier = Modifier) {
-    // Accordion: one answer open at a time.
     var expanded by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(

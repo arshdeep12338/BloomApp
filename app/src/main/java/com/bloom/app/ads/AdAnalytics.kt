@@ -1,8 +1,6 @@
 package com.bloom.app.ads
 
 import android.util.Log
-
-/** Event names required by the brief. */
 object AdEvents {
     const val APP_OPEN_REQUESTED = "app_open_ad_requested"
     const val APP_OPEN_LOADED = "app_open_ad_loaded"
@@ -17,8 +15,6 @@ object AdEvents {
 interface AdAnalytics {
     fun log(event: String, params: Map<String, Any?> = emptyMap())
 }
-
-/** Writes events to Logcat (filter by tag "BloomAds"). */
 class LogcatAdAnalytics : AdAnalytics {
     override fun log(event: String, params: Map<String, Any?>) {
         val suffix = if (params.isEmpty()) "" else " $params"

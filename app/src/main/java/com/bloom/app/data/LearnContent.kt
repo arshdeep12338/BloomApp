@@ -3,8 +3,6 @@ package com.bloom.app.data
 data class FaqItem(val question: String, val answer: String)
 
 data class FaqSection(val title: String, val items: List<FaqItem>)
-
-/** General educational content only; it is not medical advice. */
 object LearnContent {
 
     val sections: List<FaqSection> = listOf(

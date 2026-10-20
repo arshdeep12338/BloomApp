@@ -63,14 +63,6 @@ import com.bloom.app.ui.theme.Muted
 import com.bloom.app.ui.theme.Rose
 import com.bloom.app.ui.theme.RoseMid
 import kotlinx.coroutines.launch
-
-/**
- * The signed-in area. Layout, top to bottom:
- *
- *   [ tab content ]
- *   [ adaptive banner ]   ← Dashboard only, in its own layout slot (never overlaps content)
- *   [ bottom navigation ]
- */
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
@@ -144,16 +136,12 @@ private fun MainTab.icon(selected: Boolean): ImageVector = when (this) {
     MainTab.Learn -> if (selected) Icons.Filled.AutoStories else Icons.Outlined.AutoStories
     MainTab.Settings -> if (selected) Icons.Filled.Settings else Icons.Outlined.Settings
 }
-
-/** Shows whichever bottom sheet [MainUiState.sheet] points at. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SheetHost(state: MainUiState, viewModel: MainViewModel) {
     val sheet = state.sheet ?: return
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-
-    // Animate the sheet away, then clear the state.
     val close: () -> Unit = {
         scope.launch { sheetState.hide() }.invokeOnCompletion { viewModel.closeSheet() }
     }

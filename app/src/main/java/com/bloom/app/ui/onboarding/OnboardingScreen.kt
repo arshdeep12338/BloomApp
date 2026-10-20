@@ -64,12 +64,6 @@ import com.bloom.app.ui.theme.Cream
 import com.bloom.app.ui.theme.Muted
 import com.bloom.app.ui.theme.Rose
 import com.bloom.app.ui.theme.RoseMid
-
-/**
- * Four-step onboarding from the Figma:
- *  1 Welcome → 2 "A little about you" → 3 "What would you like to track daily?" → 4 reminder time.
- * "Enter Bloom" / "I'll set this up later" persist the choices and the completed flag, then call [onFinished].
- */
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel,
@@ -89,7 +83,6 @@ fun OnboardingScreen(
     ) {
         Spacer(Modifier.height(12.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            // Keeps the progress bar from shifting when the back button appears.
             Box(modifier = Modifier.size(32.dp)) {
                 if (state.step > 0) {
                     CircleIconButton(
@@ -140,13 +133,10 @@ fun OnboardingScreen(
         }
     }
 }
-
-/** Common layout: scrollable content that takes the free space, bottom actions pinned. */
 @Composable
 private fun StepLayout(
     modifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    // Weighted spacers only work in a non-scrolling column (welcome step), so scrolling is opt-out.
     scrollable: Boolean = true,
     actions: @Composable ColumnScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,

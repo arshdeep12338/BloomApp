@@ -26,13 +26,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
 private const val MIN_SPLASH_MS = 1_200L
-
-/**
- * Splash + launch routing.
- *
- *  First launch : Splash → Onboarding            (no App Open Ad)
- *  Returning    : Splash → [App Open Ad] → Home  (ad only if ready within the timeout)
- */
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel,
@@ -46,7 +39,6 @@ fun SplashScreen(
 
         val destination = viewModel.resolveStartDestination()
         if (destination == StartDestination.Home && activity != null) {
-            // Bounded wait; returns immediately if there is no ad, no network or on failure.
             appOpenAdManager.showOnLaunch(activity, AdConfig.LAUNCH_AD_TIMEOUT_MS)
         }
 
@@ -58,7 +50,6 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize().background(Cream),
         contentAlignment = Alignment.Center,
     ) {
-        // Tiny sparkles at fixed fractions of the screen.
         Canvas(modifier = Modifier.fillMaxSize()) {
             listOf(
                 Offset(0.22f, 0.18f), Offset(0.84f, 0.27f), Offset(0.17f, 0.74f),
@@ -71,7 +62,6 @@ fun SplashScreen(
                 )
             }
         }
-        // Soft glow behind the logo.
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.62f)

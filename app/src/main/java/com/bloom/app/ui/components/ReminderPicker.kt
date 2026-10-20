@@ -28,11 +28,6 @@ import com.bloom.app.data.ReminderSlot
 import com.bloom.app.ui.theme.Border
 import com.bloom.app.ui.theme.Muted
 import com.bloom.app.ui.util.formatMinutes
-
-/**
- * Time-of-day choices plus a custom time field. Shared by the last onboarding step and the
- * "Reminder Time" sheet. [minutes] is minutes after midnight, or null when nothing is chosen.
- */
 @Composable
 fun ReminderPicker(
     minutes: Int?,

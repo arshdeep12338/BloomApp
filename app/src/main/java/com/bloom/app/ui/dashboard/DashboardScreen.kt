@@ -138,7 +138,6 @@ fun DashboardScreen(
             }
         }
 
-        // Tip: only while sleep is tracked, not yet logged, and not dismissed.
         if (Goal.Sleep in tracked && state.log.sleepHrs == 0 && !state.tipDismissed) {
             Spacer(Modifier.height(14.dp))
             SectionTitle("Today's tip")

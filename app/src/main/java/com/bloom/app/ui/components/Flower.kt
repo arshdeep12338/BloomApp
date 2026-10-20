@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import com.bloom.app.ui.theme.Gold
 import com.bloom.app.ui.theme.Rose
 
-/** The Bloom logo: four petals around a gold centre, drawn with Canvas so it scales cleanly. */
 @Composable
 fun BloomFlower(
     modifier: Modifier = Modifier,

@@ -57,8 +57,6 @@ data class MainUiState(
     val progress: List<GoalProgress> get() = goalProgress(prefs, log)
     val completedCount: Int get() = progress.count { it.isComplete }
 }
-
-/** One ViewModel for the signed-in area: dashboard, the three tabs, and every bottom sheet. */
 class MainViewModel(
     private val preferences: UserPreferencesRepository,
     private val wellness: WellnessRepository,
@@ -87,8 +85,6 @@ class MainViewModel(
             message = l.message,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainUiState())
-
-    // ---- navigation / UI state
     fun selectTab(tab: MainTab) = local.update { it.copy(tab = tab, sheet = null) }
     fun openSheet(sheet: SheetType) = local.update { it.copy(sheet = sheet) }
     fun closeSheet() = local.update { it.copy(sheet = null) }
@@ -96,13 +92,11 @@ class MainViewModel(
     fun messageShown() = local.update { it.copy(message = null) }
     fun dismissTip() = local.update { it.copy(tipDismissed = true) }
 
-    // ---- daily log
     fun addProgress(goal: Goal, delta: Int) = wellness.addProgress(goal, delta)
     fun setMeal(type: MealType, quality: MealQuality) = wellness.setMeal(type, quality)
     fun setPeriodStart(date: LocalDate) = wellness.setPeriodStart(date)
     fun setSymptom(category: SymptomCategory, index: Int) = wellness.setSymptom(category, index)
 
-    // ---- settings
     fun saveProfile(name: String, stage: JourneyStage?) {
         viewModelScope.launch {
             if (name.isNotBlank()) preferences.setName(name)
@@ -127,7 +121,6 @@ class MainViewModel(
         viewModelScope.launch { preferences.setReminderMinutes(minutes) }
     }
 
-    /** Clears saved data, then lets the caller navigate back to onboarding. */
     fun signOut(onDone: () -> Unit) {
         viewModelScope.launch {
             preferences.clear()
